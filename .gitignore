@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+
+# OS files
+.DS_Store
+
+# Local outputs
+*.log
+
+# Model artifacts
+models/*.pt
+models/*.onnx
+models/*.engine
+
+# Optional large data artifacts
+# data/raw/videos/*.mp4
