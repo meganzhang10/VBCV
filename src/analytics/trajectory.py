@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import json
 from pathlib import Path
+from typing import Any
 
 import cv2
 import numpy as np
@@ -89,7 +90,8 @@ def _compute_court_speed(track_df: pd.DataFrame) -> pd.Series:
     dx = track_df["court_x_m"].diff()
     dy = track_df["court_y_m"].diff()
     dt = track_df["timestamp_sec"].diff().replace(0, np.nan)
-    return (np.sqrt(dx * dx + dy * dy) / dt).replace([np.inf, -np.inf], np.nan)
+    result: pd.Series[Any] = (np.sqrt(dx * dx + dy * dy) / dt).replace([np.inf, -np.inf], np.nan)
+    return result
 
 
 def _is_in_region(row: pd.Series, region: CourtRegion) -> bool:
@@ -246,7 +248,8 @@ def render_arc_overlay_video(
 
     out_path = Path(output_video)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    writer = cv2.VideoWriter(str(out_path), cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
+    fourcc: int = cv2.VideoWriter_fourcc(*"mp4v")  # type: ignore[attr-defined]
+    writer = cv2.VideoWriter(str(out_path), fourcc, fps, (width, height))
 
     frame_idx = 0
     while True:

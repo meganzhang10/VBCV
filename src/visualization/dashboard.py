@@ -16,7 +16,7 @@ from src.analytics.court_calibration import (
     export_calibration_report,
     export_projected_track,
 )
-from src.analytics.session_consistency import compute_session_from_manifest
+from src.analytics.session_consistency import SessionSummary, compute_session_from_manifest
 from src.analytics.speed_estimation import (
     export_speed_csv,
     export_speed_summary_json,
@@ -24,6 +24,7 @@ from src.analytics.speed_estimation import (
     run_speed_estimation,
 )
 from src.analytics.target_zone_coaching import (
+    TargetCoachingSummary,
     score_serves_for_target_zone,
     summarize_target_coaching,
 )
@@ -83,7 +84,7 @@ def _build_heatmap_data(serves_df: pd.DataFrame, bin_size_m: float = 0.75) -> pd
     )
 
 
-def _show_summary_cards(summary: object) -> None:
+def _show_summary_cards(summary: SessionSummary) -> None:
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Serves", f"{summary.serve_count}")
     col2.metric("Avg Speed (km/h)", _fmt(summary.average_speed_kph, precision=1))
@@ -148,7 +149,7 @@ def _render_session_visuals(serves_df: pd.DataFrame) -> None:
     st.dataframe(serves_df, use_container_width=True)
 
 
-def _render_target_zone_coaching(scored_df: pd.DataFrame, summary: object) -> None:
+def _render_target_zone_coaching(scored_df: pd.DataFrame, summary: TargetCoachingSummary) -> None:
     st.subheader("Target-Zone Coaching")
 
     c1, c2, c3, c4 = st.columns(4)
@@ -295,11 +296,21 @@ def _build_export_zip(serve: dict[str, object]) -> Path:
     return Path(archive_path)
 
 
-def _serve_card(serve: dict[str, object], column: object) -> None:
+def _to_optional_float(val: object) -> float | None:
+    if val is None:
+        return None
+    try:
+        return float(val)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None
+
+
+def _serve_card(serve: dict[str, object], column: st.delta_generator.DeltaGenerator) -> None:  # type: ignore[name-defined]
     column.markdown(f"**{serve['serve_id']}**")
-    column.caption(f"Speed: {_fmt(serve.get('speed_kph'), precision=1)} km/h")
+    column.caption(f"Speed: {_fmt(_to_optional_float(serve.get('speed_kph')), precision=1)} km/h")
     column.caption(
-        f"Landing: ({_fmt(serve.get('landing_x_m'), precision=2)}, {_fmt(serve.get('landing_y_m'), precision=2)}) m"
+        f"Landing: ({_fmt(_to_optional_float(serve.get('landing_x_m')), precision=2)}, "
+        f"{_fmt(_to_optional_float(serve.get('landing_y_m')), precision=2)}) m"
     )
     trajectory_video = Path(str(serve["trajectory_overlay_video"]))
     if trajectory_video.exists():

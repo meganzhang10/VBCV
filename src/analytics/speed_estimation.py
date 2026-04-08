@@ -125,7 +125,8 @@ def render_speed_overlay_video(
 
     out_path = Path(output_video)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    writer = cv2.VideoWriter(str(out_path), cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
+    fourcc: int = cv2.VideoWriter_fourcc(*"mp4v")  # type: ignore[attr-defined]
+    writer = cv2.VideoWriter(str(out_path), fourcc, fps, (width, height))
 
     frame_idx = 0
     while True:

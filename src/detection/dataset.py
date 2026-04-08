@@ -34,7 +34,7 @@ def load_manifest(manifest_csv: str | Path) -> list[ClipRecord]:
                 file_name=str(row.file_name),
                 source=str(row.source),
                 angle=str(row.angle),
-                fps=int(row.fps),
+                fps=int(row.fps),  # type: ignore[arg-type]
                 resolution=str(row.resolution),
                 status=str(row.status),
             )

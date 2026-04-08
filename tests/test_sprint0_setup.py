@@ -20,8 +20,8 @@ def test_directory_layout_exists() -> None:
 def test_input_spec_defaults() -> None:
     assert INPUT_SPEC.preferred_fps == 60
     assert INPUT_SPEC.minimum_fps == 30
-    assert INPUT_SPEC.angle == "behind-server"
-    assert INPUT_SPEC.mount == "tripod"
+    assert INPUT_SPEC.angle == "side-court"
+    assert INPUT_SPEC.mount == "tripod-or-fixed"
     assert INPUT_SPEC.file_extension == ".mp4"
 
 

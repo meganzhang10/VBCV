@@ -15,10 +15,27 @@ venv/
 # Local outputs
 *.log
 
-# Model artifacts
+# Model artifacts (top-level only -- keep trained weights in subdirs)
 models/*.pt
 models/*.onnx
 models/*.engine
 
-# Optional large data artifacts
-# data/raw/videos/*.mp4
+# Large datasets (download via setup_demo.sh or scripts/setup_and_train.py)
+data/processed/ball_dataset/
+data/processed/ball_dataset_large/
+data/processed/ball_dataset_merged/
+data/processed/ball_dataset_v2/
+data/processed/claude_labels/
+data/processed/runs/
+
+# Downloaded videos (download via setup_demo.sh)
+data/raw/videos/side_angle/
+
+# Training runs
+runs/
+
+# Gradio cache
+.gradio/
+
+# Base YOLO weights
+yolov8n.pt

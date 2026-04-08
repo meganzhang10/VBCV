@@ -8,8 +8,8 @@ class InputSpec:
     preferred_fps: int = 60
     minimum_fps: int = 30
     preferred_resolution: tuple[int, int] = (1920, 1080)
-    angle: str = "behind-server"
-    mount: str = "tripod"
+    angle: str = "side-court"
+    mount: str = "tripod-or-fixed"
     file_extension: str = ".mp4"
     codec_family: str = "h264"
 

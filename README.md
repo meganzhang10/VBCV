@@ -19,8 +19,8 @@ pytest -q
 Goal: train a volleyball-specific detector (YOLO) that works on serve clips.
 
 ### 1) Record clips
-- Collect 20-50 serve clips.
-- Keep lighting good and camera stable (tripod, behind server).
+- Collect 20-50 serve clips (or use broadcast/side-angle footage).
+- Keep lighting good and camera stable (tripod or fixed broadcast mount, side-court view).
 - Add new clips under `data/raw/videos/` and register them in `data/raw/videos/manifest.csv`.
 
 ### 2) Extract frames

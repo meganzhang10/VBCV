@@ -200,7 +200,7 @@ def render_trail_video(
     Path(output_video).parent.mkdir(parents=True, exist_ok=True)
     writer = cv2.VideoWriter(
         str(output_video),
-        cv2.VideoWriter_fourcc(*"mp4v"),
+        cv2.VideoWriter_fourcc(*"mp4v"),  # type: ignore[attr-defined]
         fps,
         (width, height),
     )

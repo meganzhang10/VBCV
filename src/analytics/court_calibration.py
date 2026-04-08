@@ -105,8 +105,10 @@ def _project_track_to_court(
 
     px = df["smooth_x"].copy()
     py = df["smooth_y"].copy()
-    px = px.where(~px.isna(), df.get("raw_x"))
-    py = py.where(~py.isna(), df.get("raw_y"))
+    if "raw_x" in df.columns:
+        px = px.where(~px.isna(), df["raw_x"])
+    if "raw_y" in df.columns:
+        py = py.where(~py.isna(), df["raw_y"])
 
     court_x: list[float | None] = []
     court_y: list[float | None] = []

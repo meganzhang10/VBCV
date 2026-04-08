@@ -44,7 +44,7 @@ def load_session_store(path: str | Path = DEFAULT_STORE_PATH) -> dict[str, Any]:
     store_path = Path(path)
     if not store_path.exists():
         return {"sessions": []}
-    payload = json.loads(store_path.read_text(encoding="utf-8"))
+    payload: dict[str, Any] = json.loads(store_path.read_text(encoding="utf-8"))
     if "sessions" not in payload or not isinstance(payload["sessions"], list):
         raise ValueError("Session store is invalid: expected top-level 'sessions' list")
     return payload
@@ -57,18 +57,19 @@ def save_session_store(store: dict[str, Any], path: str | Path = DEFAULT_STORE_P
 
 
 def _ensure_session(store: dict[str, Any], session_id: str) -> dict[str, Any]:
-    for session in store["sessions"]:
-        if session.get("session_id") == session_id:
-            if "serves" not in session:
-                session["serves"] = []
-            return session
-    session = {
+    sessions: list[Any] = store["sessions"]
+    for entry in sessions:
+        if entry.get("session_id") == session_id:
+            if "serves" not in entry:
+                entry["serves"] = []
+            return dict(entry)
+    new_session: dict[str, Any] = {
         "session_id": session_id,
         "created_at": utc_now_iso(),
         "serves": [],
     }
-    store["sessions"].append(session)
-    return session
+    sessions.append(new_session)
+    return new_session
 
 
 def list_session_ids(store: dict[str, Any]) -> list[str]:

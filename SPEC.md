@@ -3,17 +3,19 @@
 ## Objective
 Build a computer-vision pipeline for volleyball serve analysis from consumer video.
 
-## Locked Input Format (Sprint 0 decision)
-- Source: smartphone video recorded in 1080p at 60 fps (preferred), minimum 30 fps.
-- Capture setup: tripod-mounted camera.
-- Camera angle: behind-server baseline view, centered as much as possible.
-- Shot framing: full server body, ball toss, contact point, net, and receiving court visible.
+## Locked Input Format (updated Sprint 0 → Sprint 8)
+- Source: smartphone or broadcast video recorded in 1080p at 30-60 fps.
+- Capture setup: tripod-mounted or fixed broadcast camera.
+- Camera angle: side-court / broadcast view (elevated sideline perspective preferred).
+- Shot framing: full court visible with net, server, and receiving court in frame.
 - File format: `.mp4` with H.264 video codec.
 
 ## Why this format
-- Behind-server minimizes left/right depth ambiguity for serve trajectory.
-- Tripod stabilizes frame-to-frame geometry for court calibration and speed estimates.
-- 60 fps improves contact and launch-frame timing for velocity estimation.
+- Side/broadcast angle is the standard in volleyball footage and has the most available training data.
+- Pretrained volleyball detection models (YOLOv8x, VolleyVision) are trained on broadcast angles.
+- Court lines are clearly visible from side view, improving homography calibration.
+- Tripod/fixed camera stabilizes frame-to-frame geometry for court calibration and speed estimates.
+- 60 fps improves contact and launch-frame timing for velocity estimation (30 fps minimum).
 
 ## Tooling
 - Language: Python 3.11+
@@ -44,9 +46,10 @@ Build a computer-vision pipeline for volleyball serve analysis from consumer vid
 ## Assumptions
 - Exactly one ball is relevant per clip.
 - Server is in frame before toss.
-- Court lines are sufficiently visible for calibration.
-- Camera is static for each clip.
+- Court lines are sufficiently visible for calibration (side-view makes this easier).
+- Camera is static for each clip (tripod or fixed broadcast mount).
 - Lighting is adequate to keep motion blur manageable.
+- Side/broadcast angle introduces depth ambiguity on the Z-axis, so speed and landing estimates are 2D court-plane projections (not true 3D).
 
 ## Out of Scope (Sprint 0)
 - Multi-camera fusion
